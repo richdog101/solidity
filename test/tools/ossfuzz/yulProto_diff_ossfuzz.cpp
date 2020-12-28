@@ -108,11 +108,10 @@ DEFINE_PROTO_FUZZER(Program const& _input)
 	)
 		return;
 
-	YulOptimizerTester optimizerTest(
+	YulOptimizerTestCommon optimizerTest(
 		stack.parserResult(),
 		EVMDialect::strictAssemblyForEVMObjects(version),
-		optStep,
-		true
+		optStep
 	);
 	shared_ptr<solidity::yul::Block> astBlock = optimizerTest.run();
 	yulAssert(astBlock != nullptr, "Optimiser error.");
