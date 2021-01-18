@@ -55,7 +55,8 @@ class FileReport:
 
 
 def load_source(path: Union[Path, str]) -> str:
-    with open(path, mode='r', encoding='utf8') as source_file:
+    # NOTE: With newline='' is a special value to handle all newline styles but keep them untranslated.
+    with open(path, mode='r', encoding='utf8', newline='') as source_file:
         file_content = source_file.read()
 
     return file_content
@@ -193,7 +194,8 @@ def run_compiler(
 
         # Create a copy that we can use directly with the CLI interface
         modified_source_path = tmp_dir / source_file_name.name
-        with open(modified_source_path, 'w', encoding='utf8') as modified_source_file:
+        # NOTE: With newline='' is a special value to handle all newline styles but keep them untranslated.
+        with open(modified_source_path, 'w', encoding='utf8', newline='') as modified_source_file:
             modified_source_file.write(compiler_input)
 
         process = subprocess.run(
