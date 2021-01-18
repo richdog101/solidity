@@ -5626,11 +5626,20 @@ BOOST_AUTO_TEST_CASE(uninitialized_internal_storage_function)
 			}
 		}
 	)";
-	compileAndRun(sourceCode, 0, "Test");
+	ALSO_VIA_YUL(
+		DISABLE_EWASM_TESTRUN()
+		compileAndRun(sourceCode, 0, "Test");
 
-	bytes result = callContractFunction("f()");
-	BOOST_CHECK(!result.empty());
-	BOOST_CHECK(result != encodeArgs(0));
+		bytes result = callContractFunction("f()");
+		BOOST_CHECK(!result.empty());
+		// Via yul, the uninitialized function pointer is zero, because
+		// that index does not appear in the dispatch function.
+		// The old code generator has an explicit "invalid" internal function.
+		if (m_compileViaYul)
+			BOOST_CHECK(result == encodeArgs(0));
+		else
+			BOOST_CHECK(result != encodeArgs(0));
+	)
 }
 
 BOOST_AUTO_TEST_CASE(dirty_scratch_space_prior_to_constant_optimiser)
